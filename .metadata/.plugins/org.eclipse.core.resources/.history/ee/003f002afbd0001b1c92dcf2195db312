@@ -1,0 +1,15 @@
+package com.student;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class StudentResource 
+{
+	public String getName()
+	{
+		String names[] = {"Southampton","Bristol","Nottingham","Lords","Edgbaston"};
+		return names[1];
+		
+	}
+
+}

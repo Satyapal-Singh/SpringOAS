@@ -1,0 +1,124 @@
+package com.student;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.*;
+import io.swagger.v3.oas.annotations.servers.Server;
+
+
+class Student
+{
+	public int id;
+	public String name;
+	public int age;
+	public String gender;
+	
+	public Student()
+	{
+		this.id=-1;
+		this.name=null;
+		this.age=-1;
+		this.gender=null;
+	}
+	
+	public Student(int id, String name, int age, String gender)
+	{
+		this.id=id;
+		this.name=name;
+		this.age=age;
+		this.gender=gender;
+	}
+}
+
+class BodyParams
+{
+	public String id;
+	public String name;
+	public String age;		
+	public String gender;
+}
+
+@OpenAPIDefinition(
+	     info = @Info(
+	               title = "Student Records",
+	               version = "v1",
+			       description = "This app provides REST APIs for student records",
+			       contact = @Contact(
+			       name = "Satya",
+				   email = "admin@xyz.com",
+				   url = "http://orderapi.com/support"
+				)
+			),
+	     servers = {
+	            @Server( 
+	               url="http://127.0.0.1",
+	               description="DEV Server"
+	            ),
+//	            @Server( 
+//	               url="<prod url>",
+//	               description="PROD Server"
+//	            )
+	     }
+	)
+
+@RestController
+public class StudentResource 
+{
+	private List<Student> lst;
+	
+	@Operation(summary = "Get All Students")
+	@GetMapping("students")
+	public List<Student> getStudent()
+	{		
+		if(lst==null) 
+		{
+			lst=new ArrayList<Student>();
+			Student s1 = new Student(1,"John",22,"Male");	
+			Student s2 = new Student(2,"Doe",21,"Male");	
+			Student s3 = new Student(3,"Will",23,"Female");	
+			lst.add(s1);
+			lst.add(s2);
+			lst.add(s3);
+		}
+		
+		return lst;		
+	}
+	
+	@Operation(summary = "Get Particular Student")
+	@GetMapping("students/{student_id}")
+	public Student StudentRecord(@PathVariable int student_id)
+	{
+		for(Student x: lst)
+		{
+			if(x.id==student_id)
+				return x;
+		}
+		return new Student();
+	}
+	
+	@Operation(summary = "Create New Record")
+	@PostMapping(value = "students/add", consumes = MediaType.ALL_VALUE)
+	public Hashtable<String, String> addStudent(@RequestParam("id") int id,
+												@RequestParam("name") String name,
+												@RequestParam("age") int age,
+												@RequestParam("gender") String gender)
+	{
+		Student stud = new Student(id, name, age, gender);
+		lst.add(stud);
+		Hashtable<String, String> obj = new Hashtable<String, String>();
+		obj.put("status","added");
+		return obj;
+	}
+	
+}

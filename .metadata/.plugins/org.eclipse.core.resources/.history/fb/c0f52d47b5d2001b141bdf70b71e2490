@@ -1,0 +1,95 @@
+package com.student;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
+
+class Student
+{
+	public int id;
+	public String name;
+	public int age;
+	public String gender;
+	
+	public Student()
+	{
+		this.id=-1;
+		this.name=null;
+		this.age=-1;
+		this.gender=null;
+	}
+	
+	public Student(int id, String name, int age, String gender)
+	{
+		this.id=id;
+		this.name=name;
+		this.age=age;
+		this.gender=gender;
+	}
+}
+
+class BodyParams
+{
+	public int id;
+	public String name;
+	public int age;		
+	public String gender;
+}
+
+@RestController
+public class StudentResource 
+{
+	private List<Student> lst;
+	
+	@GetMapping("students")
+	public List<Student> getStudent()
+	{		
+		if(lst==null) 
+		{
+			lst=new ArrayList<Student>();
+			Student s1 = new Student(1,"John",22,"Male");	
+			Student s2 = new Student(2,"Doe",21,"Male");	
+			Student s3 = new Student(3,"Will",23,"Female");	
+			lst.add(s1);
+			lst.add(s2);
+			lst.add(s3);
+		}
+		
+		return lst;		
+	}
+	
+	@GetMapping("students/{student_id}")
+	public Student StudentRecord(@PathVariable int student_id)
+	{
+		for(Student x: lst)
+		{
+			if(x.id==student_id)
+				return x;
+		}
+		return new Student();
+	}
+	
+	@PostMapping(value = "students/add", consumes = { MediaType.APPLICATION_JSON_VALUE,
+													 MediaType.MULTIPART_FORM_DATA_VALUE,
+													 MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+													})
+	public BodyParams addStudent(@RequestBody BodyParams obj)
+	{
+		Student stud = new Student(obj.age,obj.gender,obj.id,obj.name);
+		lst.add(stud);
+		Hashtable<String, String> obj1 = new Hashtable<String, String>();
+		obj1.put("status","added");
+		return obj;
+	}
+	
+}

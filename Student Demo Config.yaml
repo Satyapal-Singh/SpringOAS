@@ -1,0 +1,93 @@
+openapi: 3.0.0
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: Test Server
+    url: http://127.0.0.1:8080
+    
+info:
+  version: "1.0.0"
+  title: Student Records
+  description: >- 
+    List of Studens
+
+tags:
+  - name: Student Records
+    description: Get or create details of students
+      
+paths:
+  /students:
+    get:
+      summary: Get all student records.
+      description: >-
+        This end-point will fetch the details of all student.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      tags:
+        - Student Records
+        
+  /students/{student_id}:
+    get:
+      summary: Get a particular student records.
+      description: >-
+        This end-point will fetch the details of a particular student.
+      parameters:
+        - in: path
+          name: student_id
+          schema:
+            type: integer
+          required: true
+          description: Student's ID
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      tags:
+        - Student Records
+        
+  /students/add:
+    post:
+      summary: Create student detail
+      description: >-
+        Add a new students details
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Student ID
+          
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+          description: Student Name
+          
+        - in: query
+          name: age
+          schema:
+            type: integer
+          required: true
+          description: Student Age
+          
+        - in: query
+          name: gender
+          schema:
+            type: string
+          required: true
+          description: Student Gender
+          
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          
+      tags:
+        - Student Records

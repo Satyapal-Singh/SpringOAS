@@ -1,0 +1,127 @@
+package com.student;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+class Student
+{
+	private int id;
+	private String name;
+	private int age;
+	private String gender;
+	
+	public Student()
+	{
+		this.id=-1;
+		this.name=null;
+		this.age=-1;
+		this.gender=null;
+	}
+	
+	public int getId() {
+			return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+}
+
+@RestController
+public class StudentResource 
+{
+	private List<Student> lst = new ArrayList<>();
+	
+	@GetMapping("students")
+	public List<Student> getStudent()
+	{		
+		Student s1 = new Student();
+		s1.setId(1);
+		s1.setName("John");
+		s1.setAge(22);
+		s1.setGender("Male");
+		
+		Student s2 = new Student();
+		s2.setId(2);
+		s2.setName("Doe");
+		s2.setAge(21);
+		s2.setGender("Male");
+		
+		Student s3 = new Student();
+		s3.setId(3);
+		s3.setName("Will");
+		s3.setAge(23);
+		s3.setGender("Female");
+		
+		lst.add(s1);
+		lst.add(s2);
+		lst.add(s3);
+		
+		return lst;		
+	}
+	
+	@GetMapping("students/{student_id}")
+	public Student StudentRecord(@PathVariable int student_id)
+	{
+		for(Student x: lst)
+		{
+			if(x.getId()==student_id)
+				return x;
+		}
+		return new Student();
+	}
+	
+	public class BodyParams
+	{
+		public int id, age;
+		public String name, gender;
+	}
+	
+	@PostMapping(path="students/add",consumes="application/json")
+	public Hashtable<String, String> addStudent(@RequestBody BodyParams getParams)
+	{
+		Student stud = new Student();
+		stud.setId(getParams.id);
+		stud.setName(getParams.name);
+		stud.setAge(getParams.age);
+		stud.setGender(getParams.gender);
+		lst.add(stud);
+		Hashtable<String, String> obj = new Hashtable<String, String>();
+		obj.put("status","added");
+		return obj;
+	}
+	
+}

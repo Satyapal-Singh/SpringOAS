@@ -1,0 +1,545 @@
+openapi: 3.0.0
+
+servers:
+  - description: Test URL for Fund Transfer
+    url: https://staging.eko.in:25004/ekoapi
+    
+info:
+  version: "1.0.0"
+  title: EKO APIs
+  description: >- 
+    Easy salary disbursal and vendor payments
+
+tags:
+  - name: FUND TRANSFER APIs
+    description: Easy salary disbursal and vendor payments
+  
+  - name: AEPS APIs
+    description: Aadhar Enabled Payment System APIs
+      
+paths:
+  /v1/agent/{user_code}/settlement:
+    post:
+      summary: Initiate a fund transfer to any bank account
+      description: >-
+        This is an example operation to show how fund transfers can be initiated
+      parameters:
+        - in: path
+          name: user_code
+          schema:
+            type: string
+          required: true
+          description: Your user code in Eko’s system
+        
+        - in: query
+          name: initiator_id
+          schema:
+            type: string
+          required: true
+          description: Your EKOs unique cell number 
+          
+        - in: query
+          name: client_ref_id
+          schema:
+            type: string
+          required: true
+          description: Your unique transaction ID
+          
+        - in: query
+          name: service_code
+          schema:
+            type: integer
+          required: true
+          description: Code of the service for fund transfer
+        
+        - in: query
+          name: payment_mode
+          schema:
+            type: integer
+          required: true
+          description: Payment mode you want to use to transfer money
+          
+        - in: query
+          name: recipient_name
+          schema:
+            type: string
+          required: true
+          description: Beneficiary name (as in bank records)
+          
+        - in: query
+          name: account
+          schema:
+            type: string
+          required: true
+          description: Beneficiary bank account number
+          
+        - in: query
+          name: ifsc
+          schema:
+            type: string
+          required: true
+          description: IFSC Code of receiver's bank
+          
+        - in: query
+          name: amount
+          schema:
+            type: integer
+          required: true
+          description: Amount to transfer
+          
+        - in: query
+          name: sender_name
+          schema:
+            type: string
+          required: true
+          description: Sender's name
+          
+        - in: query
+          name: tag
+          schema:
+            type: string
+          required: false
+          description: Payment Purpose
+          
+        - in: query
+          name: latlong
+          schema:
+            type: string
+          required: false
+          description: Sender’s location information; eg- 28.78123,72.808912
+          
+        - in: query
+          name: beneficiary_account_type
+          schema:
+            type: integer
+          required: false
+          description: Beneficiary's bank account type
+        
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Your unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+          
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      
+      tags:
+        - FUND TRANSFER APIs
+        
+  /v1/transactions/{tid}:
+    get:
+      summary: Transaction Enquiry
+      description: >-
+        Sample template for Transaction Enquiries
+      parameters:
+        - in: path
+          name: tid
+          schema:
+            type: string
+          required: true
+          description: tid or client_ref_id
+          
+        - in: query
+          name: initiator_id
+          schema:
+            type: integer
+          required: true
+          description: Id of the initiator
+          
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Your unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+          
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          
+      tags:
+        - FUND TRANSFER APIs
+        
+  /v2/aeps:
+    post:
+      summary: AePS Transaction API
+      description: >-
+        Sample template for AePS Transactions
+      parameters:
+        - in: query
+          name: service_type
+          schema:
+            type: integer
+          required: true
+          description: Code for withdrawl, bal enquiry or min statement
+          
+        - in: query
+          name: initiator_id
+          schema:
+            type: string
+          required: true
+          description: Unique cell number
+          
+        - in: query
+          name: user_code
+          schema:
+            type: string
+          required: true
+          description: User's unique code
+          
+        - in: query
+          name: customer_id
+          schema:
+            type: integer
+          required: true
+          description: Customer's mobile number
+          
+        - in: query
+          name: bank_code
+          schema:
+            type: string
+          required: true
+          description: Bank Code
+          
+        - in: query
+          name: amount
+          schema:
+            type: integer
+          required: true
+          description: Amount for withdrawl, 0 for mini statement and balance
+          
+        - in: query
+          name: client_ref_id
+          schema:
+            type: string
+          required: true
+          description: Unique transaction ID
+          
+        - in: query
+          name: pipe
+          schema:
+            type: integer
+          required: true
+          description: By default, pipe=0
+          
+        - in: query
+          name: notify_customer
+          schema:
+            type: integer
+          required: true
+          description: By default 0, 1 to send SMS
+          
+        - in: query
+          name: aadhar
+          schema:
+            type: string
+          required: true
+          description: Encrypted value of aadhar
+          
+        - in: query
+          name: piddata
+          schema:
+            type: string
+          required: true
+          description: PID Data of biometric device
+          
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: request_hash
+          schema:
+            type: string
+          required: true
+      
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        
+      tags:
+        - AEPS APIs
+        
+  /v1/transactions/{id}:
+    get:
+      summary: AePS Transaction Enquiry
+      description: >-
+        Get the status of a Money Transfer transaction basis Eko TID or client-reference-ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: EKO TID or client_ref_id
+          
+        - in: query
+          name: initiator_id
+          schema:
+            type: integer
+          required: true
+          description: Initiator ID
+          
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        
+      tags:
+        - AEPS APIs
+        
+  /v1/agent/{user_code}/settlementaccount:
+    put:
+      summary: AePS Transaction Enquiry
+      description: >-
+        Get the status of a Money Transfer transaction basis Eko TID or client-reference-ID
+      parameters:
+        - in: path
+          name: user_code
+          schema:
+            type: integer
+          required: true
+          description: User code of your merchant/distributor
+        
+        - in: query
+          name: initiator_id
+          schema:
+            type: string
+          required: true
+          description: Unique cell number
+        
+        - in: query
+          name: bank_id
+          schema:
+            type: integer
+          required: true
+          description: Unique id of each bank
+          
+        - in: query
+          name: ifsc
+          schema:
+            type: string
+          required: true
+          description: IFSC code of bank account
+          
+        - in: query
+          name: service_code
+          schema:
+            type: integer
+          required: true
+          description: Code of service
+          
+        - in: query
+          name: account
+          schema:
+            type: integer
+          required: true
+          description: User's bank account number.
+          
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+      
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      
+      tags:
+        - AEPS APIs
+  
+  /v1/agent/{user_code}/settlementaccount/verify:
+    put:
+      summary: AePS Transaction Enquiry
+      description: >-
+        Get the status of a Money Transfer transaction basis Eko TID or client-reference-ID
+      parameters:
+        - in: path
+          name: user_code
+          schema:
+            type: integer
+          required: true
+          description: User code of your merchant/distributor
+        
+        - in: query
+          name: initiator_id
+          schema:
+            type: string
+          required: true
+          description: Unique cell number
+        
+        - in: query
+          name: bank_id
+          schema:
+            type: integer
+          required: true
+          description: Unique id of each bank
+          
+        - in: query
+          name: ifsc
+          schema:
+            type: string
+          required: true
+          description: IFSC code of bank account
+          
+        - in: query
+          name: service_code
+          schema:
+            type: integer
+          required: true
+          description: Code of service
+          
+        - in: query
+          name: account
+          schema:
+            type: integer
+          required: true
+          description: User's bank account number.
+          
+        - in: query
+          name: firm_name
+          schema:
+            type: string
+          required: true
+          description: Name of merchant.
+          
+        - in: query
+          name: poa_type
+          schema:
+            type: integer
+          required: true
+          description: Pass value as 8 which is Bank Statement.
+          
+        - in: query
+          name: bank_statement_image
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+          required: true
+          description: Bank image statement
+          
+        - in: header
+          name: developer_key
+          schema:
+            type: string
+          required: true
+          description: Unique API key
+          
+        - in: header
+          name: secret_key
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+        
+        - in: header
+          name: secret_key_timestamp
+          schema:
+            type: string
+          required: true
+          description: Please refer to authentication section [https://developers.eko.in/docs/authentication]
+      
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      
+      tags:
+        - AEPS APIs
